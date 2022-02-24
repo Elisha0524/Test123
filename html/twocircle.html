@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <title>電磁波計算</title>
+  <link rel = "icon" href ="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png"type = "image/x-icon"> 
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../util/bootstrap.min.css">
+	<link rel="stylesheet" href="../util/setting.css">
+	<style>
+		.input-l {
+			font-size: 22px;
+			font-weight: bold;
+		}
+		.family {
+			font-size: 20px;
+			font-weight: bold;
+			font-family: Microsoft JhengHei;
+		}
+		.family-s {
+			font-size: 14px;
+			font-weight: bold;
+			font-family: Microsoft JhengHei;
+		}
+	</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+			</button>
+			<a class="navbar-brand glyphicon glyphicon-flash" href=""></a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+				<li><a href="../html/twocircle.html">Two Circle</a></li>
+				<li><a href="../html/fourcircle.html">Four Circle</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="../index.html"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div ng-controller="MainController as mainCtrl">
+	<div class="container-fluid text-center">
+		<div class="row content">
+			<!-- table I -->
+			<div class="col-sm-3 sidenav" style="border:2px red solid;">
+				<p>
+					<font color="red" class="family"><b>電纜地下化？</font>
+					<input type="checkbox" ng-model="mainCtrl.selectModel"/>
+					<br>
+					<font color="blue" class="family"><b>輸入相對距離[m]</font>
+				</p>
+				<table class="table table-hover">
+					<tbody>
+						<tr ng-repeat="d in mainCtrl.d track by $index" ng-if="$index <= 1">
+							<th scope="row" class="input-l">d<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.d[$index]"></td>
+						</tr>
+						<tr ng-repeat="w in mainCtrl.w track by $index" ng-if="$index <= 2">
+							<th scope="row" class="input-l">w<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.w[$index]"></td>
+						</tr>	
+						<tr>
+							<th scope="row" class="input-l">y</th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.H"></td>
+						</tr>
+						<tr>
+							<th scope="row" class="input-l">x</th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.T"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- table II -->
+			<div class="col-sm-3 sidenav" style="border:2px blue solid;"> 
+				<p><font color="blue" class="family"><b>輸入相對流資料</font></p>
+				
+				<table class="table table-hover">
+					<tbody>
+						<thead>
+							<tr>
+							<th></th>
+							<th><font color="orange" class="family"><b>電流[A]</font></th>
+							<th><font color="orange" class="family"><b>相角[度]</font></</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="i in mainCtrl.i track by $index">
+							<th scope="row">I<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.i[$index]"></td>
+							<td><b><input class="form-control form-control-sm input-l" ng-model="mainCtrl.theta[$index]"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- table III -->
+			<div class="col-sm-3 sidenav" style="border:2px green solid;">
+				<p>
+					<font color="red" class="family"><b>電纜是否屏蔽？</font>
+					<input type="checkbox" ng-model="mainCtrl.selectShield"/>
+					<br>
+					<font color="blue" class="family"><b>輸入屏蔽參數</font>
+				</p>
+				<table class="table table-hover">
+					<tr>
+						<th>f</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.frequency" title="Frequency [Hz]"></td>
+					</tr>
+					<tr>
+						<th>&#956<sub>r</sub></th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.permeabilityR" title="Relative Permeability"></td>
+					</tr>
+					<tr>
+						<th>&#963</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.conductivity" title="Conductivity [S/m]" ></td>
+					</tr>
+					<tr>
+						<th>t</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.thickness" title="Shielding Thickness [m]"></td>
+					</tr>
+					<tr>
+						<th>d</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.conductorSpace" title="Conductor Spacing [m]"></td>
+					</tr>
+					<tr>
+						<th>y<sub>1</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.observePoint" title="Observation Point [m]"></td>
+					</tr>
+				</table>
+			</div>
+			<!-- table IV -->
+			<div class="col-sm-3 sidenav" style="border:2px green solid;">
+				<p><font color="blue" class="family"><b>單獨點磁場強度</font></p>				
+				<table class="table table-hover">
+					<tbody>
+						<tr>
+							<th scope="row"><b class="family">線下垂直距離(m)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.yRealChange(mainCtrl) | number:4}}</font></td>
+						</tr>
+						<tr>
+							<th scope="row"><b class="family">線下水平距離(m)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.T}}</font></td>
+						</tr>		
+						<tr>
+							<th scope="row"><b class="family">與線下距離(m)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.rInterp(mainCtrl) | number:4}}</font></td>
+						</tr>
+						<tr>
+							<th scope="row"><b class="family">磁場強度(mG)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.eInterp(mainCtrl).Brm | number:4}}</font></td>
+						</tr>
+					</tbody>
+				</table>
+				<div align="left">
+					<button id="drawing" type="button" class="btn btn-info">Update Drawing</button>
+					<button id="drawing" type="button" class="btn btn-info" ng-click="mainCtrl.openModal()">Schematic Diagram</button>
+					<p></p>
+					<p><font color="blue"><b class="family-s">備註：</font></p>
+					<p><font color="blue"><b class="family-s">{{mainCtrl.noted()}}</font></p>
+					<p>
+						<font color="blue">
+							<a href="../source/magneticfield.xlsm">Excel File Download</a>
+						</font>
+					</p>			
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="sidenac"></div>
+	
+	<div class="container-fluid text-center">
+		<div class="row content" >
+			
+			<div class="col-sm-6 sidenan" style="border:2px green solid;">
+				<p>
+					<font color="blue" class="family">三相雙迴路縱向磁場分佈</font>
+				</p>
+				<div class="chart-container" style="position: relative; height:40vh; width:40vw">
+					<canvas id="linear-1" class="chart-line" chart-data="mainCtrl.rows_5" chart-labels="mainCtrl.x_5"
+									chart-series="mainCtrl.series_5" chart-options="mainCtrl.options_5" chart-dataset-override="mainCtrl.datasetOverride_5"></canvas>
+				</div>
+			</div>
+			<div class="col-sm-6 sidenan" style="border:2px blue solid;">
+				<p>
+					<font color="blue" class="family">三相雙迴路縱向磁場分佈</font>
+				</p>
+				<div class="chart-container" style="position: relative; height:40vh; width:40vw">
+					<canvas id="linear-2" class="chart-line" chart-data="mainCtrl.rows_last" chart-labels="mainCtrl.x_last"
+									chart-series="mainCtrl.series_last" chart-options="mainCtrl.options_last" chart-dataset-override="mainCtrl.datasetOverride_last"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer class="container-fluid text-center">
+	<p>PECL Elisha,Chiu © 2020. All rights reserved</p>
+</footer>
+</body>
+	<script src="../util/jquery.min.js"></script>
+	<script src="../util/angular.min.js"></script>
+	<script src="../util/bootstrap.min.js"></script>
+	<script src="../util/Chart.min.js"></script>
+	<script src="../util/angular-chart.min.js"></script>
+	<script src="../util/angular-animate.min.js"></script>
+	<script src="../util/angular-sanitize.min.js"></script>
+	<script src="../util/ui-bootstrap-tpls-2.5.0.min.js"></script>
+	<script src="../util/complex.js"></script>	
+	<script src="../electric/electronic_calc_2circle.js"></script>
+	<script src="../electric/electronic_field_2circle.js"></script>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <title>電磁波計算</title>
+	<link rel = "icon" href ="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png"type = "image/x-icon"> 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../util/bootstrap.min.css">
+	<link rel="stylesheet" href="../util/setting.css">
+	<style>
+		.input-l {
+			font-size: 22px;
+			font-weight: bold;
+		}
+		.family {
+			font-size: 20px;
+			font-weight: bold;
+			font-family: Microsoft JhengHei;
+		}
+		.family-s {
+			font-size: 14px;
+			font-weight: bold;
+			font-family: Microsoft JhengHei;
+		}
+	</style> 
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+			</button>
+			<a class="navbar-brand glyphicon glyphicon-flash" href=""></a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+				<li><a href="../html/twocircle.html">Two Circle</a></li>
+				<li><a href="../html/fourcircle.html">Four Circle</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="../index.html"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div ng-controller="MainController as mainCtrl">
+	<div class="container-fluid text-center">
+		<div class="row content">
+			<!-- table 1-1 (underground: selectModel is true, overhead: selectModel is false) -->
+			<div ng-class="mainCtrl.classChange(mainCtrl.selectModel)" style="border:2px red solid;">
+				<p>
+					<font color="red" class="family"><b>電纜地下化？</font>
+					<input type="checkbox" id="selectModel" ng-model="mainCtrl.selectModel"/>
+					<br>
+					<font color="blue" class="family"><b>輸入相對距離[m]</font>
+				</p>
+				<table class="table table-hover">
+					<tbody>
+						<tr>
+							<th scope="row" class="input-l">x</th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.T"></td>
+						</tr>	
+						<tr>
+							<th scope="row" class="input-l">y</th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.H">
+							</td>
+						</tr>
+						<tr ng-repeat="d in mainCtrl.d track by $index" ng-if="$index <= 2">
+							<th scope="row" class="input-l">d<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.d[$index]"></td>
+						</tr>
+						<tr ng-repeat="w in mainCtrl.w track by $index" ng-if="$index <= 2">
+							<th scope="row" class="input-l">w<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.w[$index]"></td>
+						</tr>						
+					</tbody>
+				</table>
+			</div>
+			<!-- table 1-2(if model is overhead, that will be showed) -->
+			<div class="col-sm-2 sidenav" style="border:2px red solid;"  ng-hide="mainCtrl.selectModel==true">
+				<p>
+					<font color="red" size="3"></font>
+					<br>
+					<font color="blue" class="family"><b>輸入相對距離[m]</font>
+				</p>
+				<table class="table table-hover">
+					<tbody>
+						<tr ng-repeat="d in mainCtrl.d track by $index" ng-if="$index > 2">
+							<th scope="row" class="input-l">d<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.d[$index]"></td>
+						</tr>
+						<tr ng-repeat="w in mainCtrl.w track by $index" ng-if="$index > 2">
+							<th scope="row" class="input-l">w<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.w[$index]"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- table 2-1(overhead)-->
+			<div class="col-sm-3 sidenav" style="border:2px blue solid;"> 
+				<p><font color="blue" class="family"><b>輸入相對流資料</font></p>
+				
+				<table class="table table-hover table-sm">
+					<tbody>
+						<thead>
+							<tr>
+							<th></th>
+							<th><font color="orange" class="family"><b>電流(A)</font></th>
+							<th><font color="orange" class="family"><b>相角(度)</font></</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="i in mainCtrl.i track by $index" ng-if="$index <= 5">
+							<th scope="row" class="input-l">I<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.i[$index]"></td>
+							<td><b><input class="form-control form-control-sm input-l" ng-model="mainCtrl.theta[$index]"></td>
+						</tr>		
+					</tbody>
+				</table>
+			</div>
+			<!-- table 2-2(overhead) -->	
+			<div class="col-sm-3 sidenav" style="border:2px blue solid;">
+				<p><font color="blue" class="family"><b>輸入相對流資料</font></p>
+				<table class="table table-hover table-sm">
+					<tbody>
+						<thead>
+							<tr>
+							<th></th>
+							<th><font color="orange" class="family"><b>電流(A)</font></th>
+							<th><font color="orange" class="family"><b>相角(度)</font></</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="i in mainCtrl.i track by $index" ng-if="$index > 5">
+							<th scope="row" class="input-l">I<sub>{{$index + 1}}</sub></th>
+							<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.i[$index]"></td>
+							<td><b><input class="form-control form-control-sm input-l" ng-model="mainCtrl.theta[$index]"></td>
+						</tr>		                                          
+					</tbody>
+				</table>						
+			</div>
+			<!-- table shielding -->
+			<div ng-class="mainCtrl.classChange(mainCtrl.selectModel)" style="border:2px green solid;">
+				<p>
+					<font color="red" class="family"><b>電纜是否屏蔽？</font>
+					<input type="checkbox" ng-model="mainCtrl.selectShield"/>
+					<br>
+					<font color="blue" class="family"><b>輸入屏蔽參數</font>
+				</p>
+				<table class="table table-hover">
+					<tr>
+						<th class="input-l">f</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.frequency" title="Frequency [Hz]"></td>
+					</tr>
+					<tr>
+						<th class="input-l">&#956<sub>r</sub></th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.permeabilityR" title="Relative Permeability"></td>
+					</tr>
+					<tr>
+						<th class="input-l">&#963</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.conductivity" title="Conductivity [S/m]" ></td>
+					</tr>
+					<tr>
+						<th class="input-l">t</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.thickness" title="Shielding Thickness [m]"></td>
+					</tr>
+					<tr>
+						<th class="input-l">d</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.conductorSpace" title="Conductor Spacing [m]"></td>
+					</tr>
+					<tr>
+						<th class="input-l">y<sub>1</th>
+						<td><b><input class="form-control form-control-sm input-l" type="number" ng-model="mainCtrl.observePoint" title="Observation Point [m]"></td>
+					</tr>
+				</table>			
+			</div>
+		</div>
+	</div>
+	<div class="sidenac"></div>
+	<div class="container-fluid text-center">
+			<!-- table 3 -->
+		<div class="row content">
+			<div class="col-sm-4 sidenav" style="border:2px green solid;">
+				<!-- image link -->
+				<p ng-if="mainCtrl.selectModel==true">
+					<font color="blue" class="family"><b>地下四回路電纜示意圖(4 x 2 x 2 x 4)</font>
+				</p>
+				<div ng-if="mainCtrl.selectModel==true">
+					<img src="../image/underground-four-circle.png" alt="Underground four circle" class="img-thumbnail" width="380" height="380">
+				</div>
+				<p ng-if="mainCtrl.selectModel==false">
+					<font color="blue" class="family"><b>高架四回路電纜示意圖(2 x 2 x 2 x 2 x 2 x 2)</font>
+				</p>
+				<div ng-if="mainCtrl.selectModel==false">
+					<img src="../image/overhead-four-circle.png" alt="Overhead four circle" class="img-thumbnail" width="400" height="300">
+				</div>				
+			</div>
+			<div class="col-sm-3 sidenav" style="border:2px green solid;">
+				<p><font color="blue" class="family"><b>單獨點磁場強度</font></p>				
+				<table class="table table-hover">
+					<tbody>
+						<tr>
+							<th scope="row" class="family"><b>垂直距離y(公尺)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.yRealChange(mainCtrl) | number:4}}</font></td>
+						</tr>
+						<tr>
+							<th scope="row" class="family"><b>水平距離x(公尺)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.T}}</font></td>
+						</tr>		
+						<tr>
+							<th scope="row" class="family"><b>距離R(公尺)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.rInterp(mainCtrl) | number:4}}</font></td>
+						</tr>
+						<tr>
+							<th scope="row" class="family"><b>磁場強度(毫高斯)</th>
+							<td><font color="red" class="input-l">{{mainCtrl.eInterp(mainCtrl).Brm | number:4}}</font></td>
+						</tr>			
+					</tbody>
+				</table>
+				<div align="left">
+					<button id="drawing" type="button" class="btn btn-info">Update Drawing</button>
+					<!--
+					<button id="drawing" type="button" class="btn btn-info" ng-click="mainCtrl.openModal()">Schematic Diagram</button>
+					!-->
+					<p></p>
+					<p><font color="blue" class="family-s"><b>備註：</font></p>
+					<p><font color="blue" class="family-s"><b>R:120度、S:0度、T:-120度</font></p>
+					<p><font color="blue" class="family-s"><b>{{mainCtrl.notice(mainCtrl)}}</font></p>
+					<p>
+						<font color="blue">
+							<a href="../source/magneticfield.xlsm">Excel File Download</a>
+						</font>
+					</p>			
+				</div>
+			</div>			
+			<div class="col-sm-5 sidenan" style="border:2px green solid;">
+				<font color="red" class="family">x軸雙邊模式？</font>
+				<input type="checkbox" ng-model="mainCtrl.twoSide"/>
+				<p>
+					<font color="blue" class="family">三相四回路縱向磁場分佈</font>
+				</p>
+				<div class="chart-container" style="position: relative; height:40vh; width:35vw">
+				
+					<canvas class="chart-line" chart-data="mainCtrl.rows_last" chart-labels="mainCtrl.x_last" chart-series="mainCtrl.series_last"
+									chart-options="mainCtrl.options_last" chart-dataset-override="mainCtrl.datasetOverride_last" ng-if="mainCtrl.twoSide==false"></canvas>
+					<!--!-->
+					<canvas id="linear-1" class="chart-line" chart-data="mainCtrl.rows_5" chart-labels="mainCtrl.x_5"
+									chart-series="mainCtrl.series_5" chart-options="mainCtrl.options_5" chart-dataset-override="mainCtrl.datasetOverride_5" ng-if="mainCtrl.twoSide==true"></canvas>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer class="container-fluid text-center">
+	<p>PECL Elisha,Chiu © 2020. All rights reserved</p>
+</footer>
+</body>
+	<script src="../util/jquery.min.js"></script>
+	<script src="../util/angular.min.js"></script>
+	<script src="../util/bootstrap.min.js"></script>
+	<script src="../util/Chart.min.js"></script>
+	<script src="../util/angular-chart.min.js"></script>
+	<script src="../util/angular-animate.min.js"></script>
+	<script src="../util/angular-sanitize.min.js"></script>
+	<script src="../util/ui-bootstrap-tpls-2.5.0.min.js"></script>
+	<script src="../util/complex.js"></script>	
+	<script src="../electric/electronic_calc_4circle.js"></script>
+	<script src="../electric/electronic_field_4circle.js"></script>
+</html>

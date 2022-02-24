@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h3 class="font-weight-bold" style="font-family:DFKai-sb;">
+    	<font color="blue" size="6">示意圖</font>
+    </h3>
+</div>
+	<div class="modal-body" style="width:600px">
+		<div ng-if="data.selectModel==false">
+			<!--
+			<img ng-src="../pop/overhead/Case{{data.phaseAngle(data.theta[3])}}_{{data.phaseAngle(data.theta[4])}}_{{data.phaseAngle(data.theta[5])}}_{{data.phaseAngle(data.theta[0])}}_{{data.phaseAngle(data.theta[1])}}_{{data.phaseAngle(data.theta[2])}}.png" alt="image" style="max-width:100%;">
+			!-->
+			<img ng-src="../pop/overhead.png" alt="image" style="max-width:100%;">
+		</div>
+		<div ng-if="data.selectModel==true">
+			<!--
+			<img ng-src="../pop/underground/Case{{data.phaseAngle(data.theta[3])}}_{{data.phaseAngle(data.theta[4])}}_{{data.phaseAngle(data.theta[5])}}_{{data.phaseAngle(data.theta[0])}}_{{data.phaseAngle(data.theta[1])}}_{{data.phaseAngle(data.theta[2])}}.png" alt="image" style="max-width:100%;">
+			!-->
+			<img ng-src="../pop/underground.png" alt="image" style="max-width:100%;">
+		</div>		
+	</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
